@@ -7,10 +7,12 @@ fi
 
 XILINX_DIR=$1
 
-if [ -d "$XILINX_DIR/Vivado" ]; then
-    echo "\$XILINX_DIR is found!"
+echo "VIVADO_DIR ${VIVADO_DIR:=$XILINX_DIR/Vivado/2023.2}"
+
+if [ -d "$VIVADO_DIR" ]; then
+    echo "\$VIVADO_DIR is found!"
 else
-    echo "\$XILINX_DIR is not correct. Please check!"
+    echo "\$VIVADO_DIR is not correct. Please check!"
     exit 1
 fi
 
@@ -18,19 +20,19 @@ home_dir=$(pwd)
 
 set -x
 
-git submodule init adi-hdl
-git submodule update adi-hdl
-cd ./adi-hdl/
-# git reset --hard 2019_r1
-# git reset --hard f61d9707eb0a62533efd6facab59ab2444da94c9
-git reset --hard
-git fetch
-git checkout 2022_R2
-git reset --hard 2022_R2
+cd adi-hdl
+git clean -fdx
 
-# # the lib need to be built!
-source $XILINX_DIR/Vivado/2022.2/settings64.sh
+echo "The build process uses ${NUM_THREADS:=$(nproc)} theads"
+
+if [ -f "$VIVADO_DIR/settings64.sh" ]; then
+    source "$VIVADO_DIR/settings64.sh"
+else
+    echo "ERROR: Vivado settings file not found!"
+    exit 1
+fi
+
 cd library/
-make
+make -j${NUM_THREADS}
 
 cd $home_dir

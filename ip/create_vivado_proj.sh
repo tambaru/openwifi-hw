@@ -24,13 +24,14 @@ fi
 XILINX_DIR=$1
 TCL_FILENAME=$2
 
-echo XILINX_DIR $XILINX_DIR
-echo TCL_FILENAME $TCL_FILENAME
+echo "XILINX_DIR $XILINX_DIR"
+echo "TCL_FILENAME $TCL_FILENAME"
+echo "VIVADO_DIR ${VIVADO_DIR:=$XILINX_DIR/Vivado/2023.2}"
 
-if [ -d "$XILINX_DIR/Vivado" ]; then
-    echo "$XILINX_DIR is found!"
+if [ -d "$VIVADO_DIR" ]; then
+    echo "\$VIVADO_DIR is found!"
 else
-    echo "$XILINX_DIR is not correct. Please check!"
+    echo "\$VIVADO_DIR is not correct. Please check!"
     exit 1
 fi
 
@@ -41,7 +42,12 @@ else
     exit 1
 fi
 
-source $XILINX_DIR/Vivado/2022.2/settings64.sh
+if [ -f "$VIVADO_DIR/settings64.sh" ]; then
+    source "$VIVADO_DIR/settings64.sh"
+else
+    echo "ERROR: Vivado settings file not found!"
+    exit 1
+fi
 
 ARG1=""
 ARG2=""

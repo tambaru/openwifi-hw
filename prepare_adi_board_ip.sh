@@ -5,11 +5,12 @@ if [ "$#" -ne 2 ]; then
 fi
 
 XILINX_DIR=$1
+: "${VIVADO_DIR:=$XILINX_DIR/Vivado/2023.2}"
 
-if [ -d "$XILINX_DIR/Vivado" ]; then
-    echo "\$XILINX_DIR is found!"
+if [ -d "$VIVADO_DIR" ]; then
+    echo "\$VIVADO_DIR is found!"
 else
-    echo "\$XILINX_DIR is not correct. Please check!"
+    echo "\$VIVADO_DIR is not correct. Please check!"
     exit 1
 fi
 
@@ -44,9 +45,16 @@ home_dir=$(pwd)
 
 set -x
 
-source $XILINX_DIR/Vivado/2022.2/settings64.sh
+echo "The build process uses ${NUM_THREADS:=$(nproc)} theads"
+
+if [ -f "$VIVADO_DIR/settings64.sh" ]; then
+    source "$VIVADO_DIR/settings64.sh"
+else
+    echo "ERROR: Vivado settings file not found!"
+    exit 1
+fi
 
 cd $ADI_PROJECT_DIR
-make
+make -j${NUM_THREADS}
 
 cd $home_dir
