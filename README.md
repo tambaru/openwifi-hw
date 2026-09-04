@@ -32,10 +32,10 @@ zed_fmcs2|[Xilinx zed board](https://www.xilinx.com/products/boards-and-kits/1-8
 adrv9364z7020|[ADRV9364-Z7020 + ADRV1CRR-BOB](https://www.analog.com/en/design-center/evaluation-hardware-and-software/evaluation-boards-kits/adrv9364-z7020.html)|**NO** need
 adrv9361z7035|[ADRV9361-Z7035 + ADRV1CRR-BOB/FMC](https://www.analog.com/en/design-center/evaluation-hardware-and-software/evaluation-boards-kits/ADRV9361-Z7035.html)|Need
 zc702_fmcs2|[Xilinx ZC702 board](https://www.xilinx.com/products/boards-and-kits/ek-z7-zc702-g.html) + [FMCOMMS2/3/4](https://www.analog.com/en/design-center/evaluation-hardware-and-software/evaluation-boards-kits/eval-ad-fmcomms2.html)|**NO** need
-antsdr|[MicroPhase](https://github.com/MicroPhase/) enhanced ADALM-PLUTO [Notes](kernel_boot/boards/antsdr/notes.md)|**NO** need
-e310v2|[MicroPhase](https://github.com/MicroPhase/) new antsdr [Notes](kernel_boot/boards/e310v2/README.md)|**NO** need
-antsdr_e200|[MicroPhase](https://github.com/MicroPhase/) enhanced ADALM-PLUTO (smaller/cheaper) [Notes](kernel_boot/boards/antsdr_e200/README.md)|**NO** need
-sdrpi|[HexSDR](https://github.com/HexSDR/) SDR in Raspberry Pi size [Notes](kernel_boot/boards/sdrpi/notes.md)|**NO** need
+antsdr|[MicroPhase](https://github.com/MicroPhase/) enhanced ADALM-PLUTO [Notes](boot/boards/antsdr/notes.md)|**NO** need
+e310v2|[MicroPhase](https://github.com/MicroPhase/) new antsdr [Notes](boot/boards/e310v2/README.md)|**NO** need
+antsdr_e200|[MicroPhase](https://github.com/MicroPhase/) enhanced ADALM-PLUTO (smaller/cheaper) [Notes](boot/boards/antsdr_e200/README.md)|**NO** need
+sdrpi|[HexSDR](https://github.com/HexSDR/) SDR in Raspberry Pi size [Notes](boot/boards/sdrpi/notes.md)|**NO** need
 zcu102_fmcs2|[Xilinx ZCU102 board](https://www.xilinx.com/products/boards-and-kits/ek-u1-zcu102-g.html) + [FMCOMMS2/3/4](https://www.analog.com/en/design-center/evaluation-hardware-and-software/evaluation-boards-kits/eval-ad-fmcomms2.html)|Need
 rfsoc4x2|[RFSoC4x2 board](https://www.amd.com/en/corporate/university-program/aup-boards/rfsoc4x2.html)|Need
 neptunesdr|Low cost Zynq 7020 + AD9361 board (Unofficial!)|**NO** need
@@ -74,7 +74,7 @@ export BOARD_NAME=your_board_name
 ```
 * Generate ip_repo for the top level FPGA project (will take a while):
 ```
-cd openwifi-hw/boards/$BOARD_NAME/
+cd boards/$BOARD_NAME/
 ../create_ip_repo.sh $XILINX_DIR
 ```
 When encountering an issue with Vitis HLS "ERROR: '2xxxxxxxxx' is an invalid argument. Please specify an integer value", apply the patch as described here: https://support.xilinx.com/s/article/76960.
@@ -89,7 +89,7 @@ File --> Export --> Export Hardware --> Next --> Include bitstream --> Next --> 
 (This step is invoked automatically by previous create_ip_repo.sh)
 * In Linux, store the FPGA files to a specific directory:
 ```
-cd openwifi-hw/boards
+cd boards
 ./sdk_update.sh $BOARD_NAME $OPENWIFI_HW_IMG_DIR
 ```
 Above command will store the FPGA img (.xsa .ltx) and the related git info into another directory $OPENWIFI_HW_IMG_DIR that can be picked up by openwifi software building environment later on. Please check README of the openwifi repository.
