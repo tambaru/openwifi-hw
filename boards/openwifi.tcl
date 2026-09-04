@@ -17,25 +17,6 @@ set BOARD_NAME [lindex [split [exec pwd] /] end]
 puts "openwifi.tcl BOARD_NAME $BOARD_NAME"
 source ../../ip/parse_board_name.tcl
 
-# This overrides the value in ip_repo_gen.tcl!
-set NUM_CLK_PER_US 100
-set  fd  [open  "./ip_repo/clock_speed.v"  w]
-puts $fd "`define NUM_CLK_PER_US $NUM_CLK_PER_US"
-if {$fpga_size_flag == 0} {
-  puts $fd "`define SMALL_FPGA 1"
-}
-close $fd
-exec cp ./ip_repo/clock_speed.v ./ip_repo/tx_intf/src/ -f
-exec cp ./ip_repo/clock_speed.v ./ip_repo/rx_intf/src/ -f
-exec cp ./ip_repo/clock_speed.v ./ip_repo/xpu/src/ -f
-
-# -----------generate git rev info (overwrite ip_repo_gen.tcl)---
-set  fd  [open  "./ip_repo/xpu/src/openwifi_hw_git_rev.v"  w]
-set HASHCODE [exec ../../get_git_rev.sh]
-puts $fd "`define OPENWIFI_HW_GIT_REV (32'h$HASHCODE)"
-close $fd
-# ----end of generate generate git rev info----------------------
-
 # Use origin directory path location variable, if specified in the tcl shell
 if { [info exists ::origin_dir_loc] } {
   set origin_dir $::origin_dir_loc
@@ -112,7 +93,6 @@ set proj_dir [get_property directory [current_project]]
 set obj [current_project]
 set_property -name "board_part_repo_paths" -value "$board_part_repos" -objects $obj
 set_property -name "board_part" -value "$board_part_string" -objects $obj
-set_property -name "classic_soc_boot" -value "0" -objects $obj
 set_property -name "compxlib.activehdl_compiled_library_dir" -value "$proj_dir/${_xil_proj_name_}.cache/compile_simlib/activehdl" -objects $obj
 set_property -name "compxlib.funcsim" -value "1" -objects $obj
 set_property -name "compxlib.ies_compiled_library_dir" -value "$proj_dir/${_xil_proj_name_}.cache/compile_simlib/ies" -objects $obj

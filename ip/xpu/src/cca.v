@@ -1,6 +1,6 @@
 // Xianjun jiao. putaoshu@msn.com; xianjun.jiao@imec.be;
+`include "global_config.v"
 `include "board_def.v"
-`include "clock_speed.v"
 `timescale 1 ns / 1 ps
 
 `include "xpu_pre_def.v"

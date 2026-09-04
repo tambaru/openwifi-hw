@@ -1,5 +1,5 @@
 // Xianjun jiao. putaoshu@msn.com; xianjun.jiao@imec.be;
-`include "clock_speed.v"
+`include "global_config.v"
 `include "board_def.v"
 
 `include "xpu_pre_def.v"

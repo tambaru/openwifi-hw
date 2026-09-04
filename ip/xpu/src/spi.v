@@ -1,4 +1,4 @@
-`include "clock_speed.v"
+`include "global_config.v"
 `include "spi_command.v"
 `define CLK_DIV (`NUM_CLK_PER_US+99)/100 // ceil for maximum 50 MHz SPI clock  
 `timescale 1 ns / 1 ps

@@ -25,76 +25,32 @@
 # argument 2: NUM_CLK_PER_US (for example: input 100 for 100MHz)
 # argument 3~7 (if exist): for `define RX_INTF_ARGUMENT in rx_intf_pre_def.v to enable some compiling time conditions
 
-set ARGUMENT1 [lindex $argv 0]
-set ARGUMENT2 [lindex $argv 1]
-set ARGUMENT3 [lindex $argv 2]
-set ARGUMENT4 [lindex $argv 3]
-set ARGUMENT5 [lindex $argv 4]
-set ARGUMENT6 [lindex $argv 5]
-set ARGUMENT7 [lindex $argv 6]
+set BOARD_NAME [lindex $argv 0]
+set NUM_CLK_PER_US [lindex $argv 1]
 
-if {$ARGUMENT1 eq ""} {
-  set BOARD_NAME zed_fmcs2
-} else {
-  set BOARD_NAME $ARGUMENT1
-}
+if {$BOARD_NAME eq ""} { set BOARD_NAME "zed_fmcs2" }
+if {$NUM_CLK_PER_US eq ""} { set NUM_CLK_PER_US 100 }
 
-if {$ARGUMENT2 eq ""} {
-  set NUM_CLK_PER_US 100
-} else {
-  set NUM_CLK_PER_US $ARGUMENT2
-}
+set DEFINE_LIST [list \
+    [lindex $argv 2] \
+    [lindex $argv 3] \
+    [lindex $argv 4] \
+    [lindex $argv 5] \
+    [lindex $argv 6] \
+    [lindex $argv 7] \
+]
 
 source ../parse_board_name.tcl
 
+if {$part_string eq ""} {
+  puts "ERROR: Part string is empty. Script aborted."
+  return 1
+}
+
 set MODULE_NAME RX_INTF
-set  fd  [open  "./src/rx_intf_pre_def.v"  a]
-if {$ARGUMENT3 eq ""} {
-  puts $fd " "
-} else {
-  puts $fd "`define $MODULE_NAME\_$ARGUMENT3"
-}
-if {$ARGUMENT4 eq ""} {
-  puts $fd " "
-} else {
-  puts $fd "`define $MODULE_NAME\_$ARGUMENT4"
-}
-if {$ARGUMENT5 eq ""} {
-  puts $fd " "
-} else {
-  puts $fd "`define $MODULE_NAME\_$ARGUMENT5"
-}
-if {$ARGUMENT6 eq ""} {
-  puts $fd " "
-} else {
-  puts $fd "`define $MODULE_NAME\_$ARGUMENT6"
-}
-if {$ARGUMENT7 eq ""} {
-  puts $fd " "
-} else {
-  puts $fd "`define $MODULE_NAME\_$ARGUMENT7"
-}
-puts $fd "`define $BOARD_NAME"
-close $fd
-#-----end of process arguments (if exist)-------
 
-puts "BOARD_NAME $BOARD_NAME"
-puts "NUM_CLK_PER_US $NUM_CLK_PER_US"
-puts "ultra_scale_flag $ultra_scale_flag"
-puts "part_string $part_string"
-puts "fpga_size_flag $fpga_size_flag"
-puts "ARGUMENT3 $MODULE_NAME\_$ARGUMENT3"
-puts "ARGUMENT4 $MODULE_NAME\_$ARGUMENT4"
-puts "ARGUMENT5 $MODULE_NAME\_$ARGUMENT5"
-puts "ARGUMENT6 $MODULE_NAME\_$ARGUMENT6"
-puts "ARGUMENT7 $MODULE_NAME\_$ARGUMENT7"
-
-# -----------generate clock_speed.v---------------
-set  fd  [open  "./src/clock_speed.v"  w]
-puts $fd "`define NUM_CLK_PER_US $NUM_CLK_PER_US"
-close $fd
-file copy -force ../board_def.v ./src/board_def.v
-# ----end of generate clock_speed.v---------------
+source ../generate_configs.tcl
+lassign [generate_system_configs $MODULE_NAME $BOARD_NAME $NUM_CLK_PER_US $fpga_size_flag $DEFINE_LIST] global_config local_config
 
 # Set the reference directory for source file relative paths (by default the value is script directory path)
 set origin_dir "."
@@ -189,9 +145,9 @@ set_property -name "compxlib.vcs_compiled_library_dir" -value "$proj_dir/${proje
 set_property -name "compxlib.xsim_compiled_library_dir" -value "" -objects $obj
 set_property -name "corecontainer.enable" -value "0" -objects $obj
 set_property -name "default_lib" -value "xil_defaultlib" -objects $obj
-set_property -name "dsa.num_compute_units" -value "60" -objects $obj
-set_property -name "dsa.rom.debug_type" -value "0" -objects $obj
-set_property -name "dsa.rom.prom_type" -value "0" -objects $obj
+set_property -name "platform.num_compute_units" -value "60" -objects $obj
+set_property -name "platform.rom.debug_type" -value "0" -objects $obj
+set_property -name "platform.rom.prom_type" -value "0" -objects $obj
 set_property -name "enable_optional_runs_sta" -value "0" -objects $obj
 set_property -name "generate_ip_upgrade_log" -value "1" -objects $obj
 set_property -name "ip_cache_permissions" -value "read write" -objects $obj
@@ -246,7 +202,7 @@ set_property -name "edif_extra_search_paths" -value "" -objects $obj
 set_property -name "elab_link_dcps" -value "1" -objects $obj
 set_property -name "elab_load_timing_constraints" -value "1" -objects $obj
 set_property -name "generic" -value "" -objects $obj
-set_property -name "include_dirs" -value "" -objects $obj
+set_property -name "include_dirs" -value [list [file normalize "$origin_dir/.."]] -objects $obj
 set_property -name "lib_map_file" -value "" -objects $obj
 set_property -name "loop_count" -value "1000" -objects $obj
 set_property -name "name" -value "sources_1" -objects $obj

@@ -1,5 +1,5 @@
 // Xianjun jiao. putaoshu@msn.com; xianjun.jiao@imec.be;
-`include "openwifi_hw_git_rev.v"
+`include "global_config.v"
 `include "xpu_pre_def.v"
 
 `ifdef XPU_ENABLE_DBG

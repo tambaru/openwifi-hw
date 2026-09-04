@@ -1,7 +1,6 @@
 
 // Xianjun jiao. putaoshu@msn.com; xianjun.jiao@imec.be;
-`include "fpga_scale.v"
-`include "has_side_ch_flag.v"
+`include "global_config.v"
 `include "side_ch_pre_def.v"
 
 `timescale 1 ns / 1 ps
