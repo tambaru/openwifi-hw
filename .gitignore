@@ -13,10 +13,7 @@ boards/*/src/system
 boards/*/src/ip
 boards/*/src/ipshared
 
-ip/*/src/fpga_scale.v
 ip/*/src/board_def.v
-ip/*/src/clock_speed.v
-ip/*/src/has_side_ch_flag.v
 ip/*/src/*_pre_def.v
 ip/*/src/*_git_rev.v
 ip/*/src/spi_command.v
